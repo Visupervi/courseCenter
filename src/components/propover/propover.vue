@@ -95,7 +95,7 @@
           this.list = res.result;
 
         } else {
-          mui.toast('暂无数据', '温馨提示')
+          this.$toast('暂无数据', '温馨提示')
         }
         console.log('res', res);
       }

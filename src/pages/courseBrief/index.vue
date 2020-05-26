@@ -118,7 +118,7 @@
         setTimer: null,
         scrollOrLeave: false,
         imgTimer: null,
-        dpPlayer:null
+        dpPlayer: null
       }
     },
     beforeCreate() {
@@ -203,7 +203,15 @@
       },
       //变为已学课程
       async studyedLesson() {
-        let res = saveHaveLesson({lessonId: this.$route.params.lessonId})
+        let res = await saveHaveLesson({lessonId: this.$route.params.lessonId});
+        communicationWithNative({
+            method: "depponCourseTaskFinish",
+            args: ["LEARN_COURSE"]
+          },
+          {
+            method: "depponCourseTaskFinish",
+            args: ["LEARN_COURSE"]
+          })
       },
       //获取教程内容
       async getCourseInfo() {
@@ -231,6 +239,7 @@
             this.htmlVal = res.result[0].materialText;
             this.carouseShow = true;
             this.startStudyDate();
+            this.setCurrentStudy();
             this.getCatchData();
           } else {
             // saveBrowserNum({lessonId: this.$route.params.lessonId});
@@ -253,7 +262,7 @@
           this.getConmentList();
         }
       },
-      //获取缓存数据
+      //获取缓存数据,
       async getCatchData() {
         let res = await getCacheData({
           lessonId: this.$route.params.lessonId
@@ -288,7 +297,7 @@
           method: 'hideTitle',
           args: null,
         }, {
-          method: 'hideTitle',
+          method: '',
           args: []
         })
       }
@@ -324,7 +333,7 @@
             url: `http://video.microc.cn/${that.videoUrl}`,
             pic: this.firstImgUrl,
             thumbnails: '',
-            preload:'metadata'
+            preload: 'metadata'
           },
           subtitle: {
             // url: 'webvtt.vtt',
@@ -350,37 +359,6 @@
            * @type {string}
            */
           video.style.objectFit = "contain";//
-          let that = this;
-          video.addEventListener("x5videoexitfullscreen", function () {
-            // console.log('x5videoexitfullscreen退出全屏');
-            // this.completeStuDate();
-            // this.setCurrentStudy();
-            if(dp.video.currentTime === dp.video.duration){
-              // console.log("已播放时长与总时长")
-              // that.studyedLesson();
-            }else{
-              // that.setCurrentStudy();
-            }
-            // dp.fullScreen.cancel('web');
-          });
-          video.addEventListener('x5videoenterfullscreen', () => {
-            // this.handleResize(video);
-            // dp.fullScreen.request('web');
-            if(dp.video.currentTime === dp.video.duration){
-              // that.studyedLesson()
-            }
-          });
-          dp.on('fullscreen', () => {
-          });
-          dp.on("fullscreen_cancel", () => {
-
-            // console.log('dplayer推出全屏')
-
-          });
-          dp.on("resize", () => {
-            // console.log(document.querySelector(".dplayer-video-wrap"));
-            // console.log('resize');
-          })
         }
         let controller = document.querySelector(".videoPlay .dplayer-controller .dplayer-bar-wrap");
         document.querySelector(".videoPlay .dplayer-controller").style.bottom = "20px";
@@ -406,7 +384,7 @@
           that.startStudyDate();
           that.setBreakThroughPoints();
           that.setCurrentStudy();
-          if(!getDeviceInfo()){
+          if (!getDeviceInfo()) {
             dp.fullScreen.request('web');
           }
           // dp.fullScreen.request('web');
@@ -414,10 +392,10 @@
         //监听暂停播放，视频播放完成也会掉用
         dp.on('pause', (player) => {
           // endtStudyTime({lessonId: this.$route.params.lessonId});
-          if(dp.video.duration === dp.video.currentTime){
+          if (dp.video.duration === dp.video.currentTime) {
             that.studyedLesson()
-          }else{
-           that.completeStuDate()
+          } else {
+            that.completeStuDate()
           }
         })
       }
@@ -495,6 +473,7 @@
           // console.log("totalScroll", totalScroll);
           if (el.offsetHeight < el.scrollHeight) {
             evt._isScroller = true;
+            this.setCurrentStudy();
           }
         });
       }
@@ -533,17 +512,22 @@
       addEventHandler(elem) {
         let scroll = mui('.mui-scroll-wrapper').scroll();
         // console.log("122222");
-          elem.addEventListener('scroll', (e) => {
-            if ((elem.offsetHeight + elem.scrollTop) === elem.scrollHeight) {
-              if (!this.scrollOrLeave) {
-                this.completeStuDate();
-                this.studyedLesson();
-                this.scrollOrLeave = true;
-              } else {
-              }
+        elem.addEventListener('scroll', (e) => {
+          // console.log("121212122121");
+          // console.log(elem.offsetHeight)
+          // console.log(elem.scrollTop)
+          // console.log(elem.scrollHeight)
+          if ((elem.offsetHeight + elem.scrollTop)/elem.scrollHeight > 0.9) {
+            if (!this.scrollOrLeave) {
+              this.completeStuDate();
+              this.studyedLesson();
+              this.scrollOrLeave = true;
+            } else {
+              // this.setCurrentStudy();
             }
-          })
-        }
+          }
+        })
+      }
     },
     components: {
       // player,
@@ -554,8 +538,8 @@
       //离开页面未发生滚动
       // this.dpPlayer.destroy()
       let video = document.querySelector(".videoPlay video");
-      console.log("video",video);
-      if(video !== null){
+      console.log("video", video);
+      if (video !== null) {
         video.pause();
       }
       this.isComplite = true;
@@ -603,6 +587,8 @@
         img {
           height: 100%;
           width: 100%;
+          user-select: none;
+          -webkit-user-select: none;
         }
       }
     }
@@ -614,6 +600,8 @@
       img {
         height: 100%;
         width: 100%;
+        user-select: none;
+        -webkit-user-select: none;
       }
     }
 
@@ -757,6 +745,8 @@
 
         img {
           width: 100%;
+          user-select: none;
+          -webkit-user-select: none;
         }
       }
     }

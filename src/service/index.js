@@ -14,9 +14,9 @@ import {communicationWithNative} from './superGuide';
 console.log(process.env.VUE_APP_MODE,"读取环境");
 let url = "";
 if(process.env.VUE_APP_MODE === "production"){
-  url = ''
+  url = 'http://lesson.chaojidaogou.com:88'
 }else {
-  url = ''
+  url = 'http://lesson.chaojidaogou.com:89'
 }
 Axios.defaults.withCredentials = true;
 let timer;
@@ -27,10 +27,10 @@ const opts = {
   background: 'rgba(0, 0, 0, 0.7)'
 };
 const axios = Axios.create({
-  // baseURL: '',//查一下自己的地址
-  // baseURL: '',//查一下自己的地址
-  // baseURL: '',//查一下自己的地址
-  // baseURL: '',//查一下自己的地址
+  // baseURL: 'http://10.226.124.254:9000',//查一下自己的地址
+  // baseURL: 'http://dptutor.chaojidaogou.com',//查一下自己的地址
+  // baseURL: 'http://106.54.156.68:5015',//查一下自己的地址
+  // baseURL: 'http://172.16.1.43:9000',//查一下自己的地址
   baseURL: url,//查一下自己的地址
   timeout: 10000,
   responseType: 'json',
@@ -49,6 +49,7 @@ axios.interceptors.request.use(config => {
     config.url !== "/app/checkFavoriteInfo" &&
     config.url !== "/app/checkLikeInfo" &&
     config.url !== "/app/getLessonTypeList" &&
+    config.url !== "/app/getLessonDataList" &&
     config.url !== '/app/startStudyStatic' &&
     config.url !== "/app/endStudyStatic" &&
     config.url !== "/app/getCacheData" &&
@@ -67,6 +68,7 @@ axios.interceptors.request.use(config => {
     config.url !== "/app/saveHaveLesson" &&
     config.url !== "/app/saveCurrentStudy" &&
     config.url !== "/app/checkLikeInfo" &&
+    config.url !== "/app/delfromExamUser" &&
     config.url !== "/app/saveCriticText"
   ) {
     Indicator.open({

@@ -3,12 +3,16 @@
   <div class="collageCourse">
     <!--头部信息-->
     <!--<Header :title="headTitle" @childFn="parentFn"></Header>-->
-    <v-touch @swipeleft="touchLeft" class="touchWrap" @swiperight="touchRight" tag="div"  @swipedown="touchDown" :swipe-options="{direction: 'horizontal'}">
+    <div class="touchWrap">
+<!--    <v-touch @swipeleft="touchLeft" class="touchWrap" @swiperight="touchRight" tag="div"  @swipedown="touchDown" :swipe-options="{direction: 'horizontal'}">-->
       <search v-if="" @getSearchVal="searchVal" :urlFlag="selecData.flag" :title="headTitle"></search>
-      <treeSelect v-if="!isShowList" @getTreeSelect="getSelectVal" :sosoVal="sosoVal"
-                  :selectData="selecData"></treeSelect>
+<!--      <treeSelect v-if="!isShowList" @getTreeSelect="getSelectVal" :sosoVal="sosoVal"-->
+<!--                  :selectData="selecData"></treeSelect>-->
+      <condition-component v-if="!isShowList" @getTreeSelect="getSelectVal" :sosoVal="sosoVal"
+                  :selectData="selecData"></condition-component>
       <courseList v-if="isShowList && selecData.typeId !== ''" :selecData="selecData"></courseList>
-    </v-touch>
+<!--    </v-touch>-->
+    </div>
     <!--@getSendData='getMsgFormSon'-->
   </div>
 
@@ -27,6 +31,8 @@
   import treeSelect from '../../components/treeSelect/treeSelect';
   import Header from '../../components/header';
   import courseList from '../../components/courseList/courseList';
+  import tabSelect from "../../components/tabSelect/tabSelect";
+  import conditionComponent from "../../components/conditionComponent/conditionComponent";
   import {androidHandler} from '../../service/inputUp';
   import {routerSwitch} from '../../service/routerSwitch'
   let routerName = "collageCourse";
@@ -122,7 +128,7 @@
           method: 'hideTitle',
           args: null,
         }, {
-          method: 'hideTitle',
+          method: '',
           args: []
         })
       },
@@ -131,7 +137,9 @@
       search,
       treeSelect,
       Header,
-      courseList
+      courseList,
+      tabSelect,
+      conditionComponent
     },
     // beforeDestroy() {
     //   window.removeEventListener("popstate",this.addEventBack,false)
@@ -143,6 +151,7 @@
   .collageCourse {
     height: 100%;
     overflow: hidden;
+    /*padding-top: 0.275rem;*/
     .touchWrap {
       touch-action: pan-y !important;
     }

@@ -75,17 +75,10 @@
     },
     created() {
       this.getFailStudy();
-      this.hideNativeHeder();
+      // this.hideNativeHeder();
     },
     mounted() {
       overscroll(this.$refs.scrollWrap);
-      // document.body.addEventListener('touchmove', function (evt) {
-      //   // console.log("evt",evt);
-      //   if (!evt._isScroller) {
-      //     evt.preventDefault();
-      //   }
-      // });
-
     },
     methods: {
       //获取差错类型数据
@@ -257,6 +250,7 @@
             user-select: none;
             -webkit-user-select: none;
             -webkit-touch-callout: none;
+            pointer-events:none;
           }
         }
 
@@ -330,6 +324,8 @@
 
                 img {
                   width: 100%;
+                  -webkit-touch-callout: none;
+                  pointer-events:none;
                 }
               }
 

@@ -84,7 +84,7 @@
     },
     created() {
       this.getFailStudy();
-      this.hideNativeHeder();
+      // this.hideNativeHeder();
     },
     mounted() {
       overscroll(this.$refs.scrollWrap);

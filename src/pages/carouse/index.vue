@@ -62,8 +62,6 @@
         </van-tab>
       </van-tabs>
     </div>
-    <!--<coment-prop v-if="propOver" :objData="{'propOver':propOver,'isComents':isComents}"-->
-    <!--@getSendData='getSendData' @optionComent="optionComent"></coment-prop>-->
     <div class="breakThrough" v-show="true" ref="btnHei" v-if="switchTab === 0">
       <van-button class="isActive" type="primary" size="large" v-show="true" @click="gotoCourseDetail" ref="btnText">
         {{btnName}}
@@ -219,12 +217,10 @@
           this.createTime = res.result[0].lessonCreateTime;
           this.firstImgUrl = res.result[0].lessonImg;
           this.headTitle = res.result[0].lessonName;
-          // this.$refs.carouse.innerHTML = res.result[0].materialText;
-          // this.$forceUpdate();
           this.contentType = res.result[0].contentType;
           this.title = res.result.title;
           this.glance = res.result[0].browseNum;
-          console.log("this.glance", this.glance)
+          // console.log("this.glance", this.glance)
         }
       },
       //获取评论列表
@@ -250,14 +246,10 @@
             text: this.comentValue
           });
           if (parseInt(res.code) === 200) {
-            // this.isShow = false;
-            // this.isComent = true;
             this.comentList = [];
             this.$toast("😀评论成功!");
             this.getConmentList();
             this.comentValue = "";
-            // this.$emit("optionComent","已评论");
-            // this.closeProp(true)
           }
         } else {
           this.$notify({
@@ -316,11 +308,6 @@
         }
         // console.log("是否点赞",res,this.likeFlag)
       },
-      //评价课程
-      comentCourse() {
-        // this.propOver = true;
-        // this.isComents = !this.isComents;
-      },
       //获取子组件的值
       getSendData(data) {
         console.log('评论data', data);
@@ -361,7 +348,7 @@
       //去详情页
       gotoCourseDetail() {
         //记录浏览量
-        console.log("this.$refs.btnText", this.$refs.btnText);
+        // console.log("this.$refs.btnText", this.$refs.btnText);
           if (this.contentType === '1') {
             // this.startStudyDate();
             saveBrowserNum({lessonId: this.$route.params.lessonId})
@@ -381,7 +368,7 @@
           method: 'hideTitle',
           args: null,
         }, {
-          method: 'hideTitle',
+          method: '',
           args: []
         })
       },
@@ -407,15 +394,6 @@
   .carouse {
     height: 100%;
     position: relative;
-    /*margin-top: 10px;*/
-    /*height: 100%;*/
-    /*height: calc(100% - 46px - 3rem);*/
-    /*min-height: 0;*/
-    /*position: relative;*/
-    /*overflow-y: hidden;*/
-    /*margin-bottom: 3rem;*/
-    /*-webkit-overflow-scrolling: touch;*/
-
     .carouse {
       height: 10rem;
 
@@ -424,6 +402,8 @@
         width: 100%;
         user-select: none;
         -webkit-user-select: none;
+        -webkit-touch-callout: none;
+        pointer-events:none;
       }
     }
 
@@ -445,7 +425,7 @@
 
       .des {
         p:nth-child(1) {
-          font-size: 0.6rem;
+          font-size: 0.857rem;
 
           span {
             color: #0099FF;
@@ -456,6 +436,7 @@
           /*text-indent: 0.01rem;*/
           padding: 0 0.286rem;
           word-break: break-all;
+          font-size: 0.757rem;
         }
       }
 
@@ -474,6 +455,10 @@
         img {
           height: 100%;
           width: 100%;
+          user-select: none;
+          -webkit-user-select: none;
+          -webkit-touch-callout: none;
+          pointer-events:none;
         }
       }
 

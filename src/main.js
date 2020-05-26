@@ -38,6 +38,7 @@ import 'mint-ui/lib/style.css'
 // const vconsole = new vConsole();
 // Vue.use(vconsole);
 
+
 import VueTouch from 'vue-touch';
 VueTouch.config.swip = {
   threshold:50
@@ -83,22 +84,11 @@ Vue.use(Button)
   .use(Tabs);
 Vue.config.productionTip = false;
 // Vue.prototype.$inputUp = inputUp;
+window.eventBus = new Vue();
 new Vue({
   el: "#app",
   router,
   store,
   render: h => h(App),
-  // mounted() {
-  //   // document.dispatchEvent(new Event('render-event'))
-  // }
 });
 
-// router.beforeEach((to, from, next) => {
-//   if (to.name=== "myStudy"  &&  from.name==="courseBrief" ) {
-//     router.go(-1);
-//     next(false)
-//   } else {
-//     next()
-//   }
-//   // 这样当从一个普通页面A进入待监听组件时，在待监听组件中按返回键时能正常进入A
-// })

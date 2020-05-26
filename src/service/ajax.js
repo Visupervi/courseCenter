@@ -1,5 +1,5 @@
 import axios from '../service';
-import {Notify} from 'vant'
+import {Toast} from 'vant'
 
 /**
  * @Author Visupervi
@@ -28,8 +28,12 @@ export default function $axios(url, data = {}, type = "GET", config = {}) {
         //   {
         //     type:'warning',
         //     message: err,
-        //   }
-        // )
+        // //   }
+        // console.log("err",err)
+        // // )
+        // Toast({
+        //   message:err
+        // });
       })
     }
   )

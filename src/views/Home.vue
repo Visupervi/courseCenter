@@ -1,6 +1,25 @@
 <template>
   <div class="home">
-    <vueMiniPlayer ref="vueMiniPlayer" :video="video" :mutex="true" @fullscreen="handleFullscreen"/>
+    <ul>
+      <li>1212121212</li>
+      <li>1212121212</li>
+      <li>1212121212</li>
+      <li>1212121212</li>
+      <li>1212121212</li>
+      <li>1212121212</li>
+      <li>1212121212</li>
+      <li>1212121212</li>
+      <li>1212121212</li>
+      <li>1212121212</li>
+      <li>1212121212</li>
+      <li>1212121212</li>
+      <li>1212121212</li>
+      <li>1212121212</li>
+      <li>1212121212</li>
+      <li>1212121212</li>
+      <li>1212121212</li>
+    </ul>
+<!--    <vueMiniPlayer ref="vueMiniPlayer" :video="video" :mutex="true" @fullscreen="handleFullscreen"/>-->
   </div>
 </template>
 
@@ -101,6 +120,7 @@ export default {
   .home{
     position: relative;
     height: 100%;
+    overflow-x: scroll;
     .video-js{
       .vjs-big-play-button{
         width: 1.5em;
@@ -117,6 +137,13 @@ export default {
       }
       .vjs-fullscreen-control{
         right: -15rem;
+      }
+    }
+    ul {
+      width: 1000px;
+      display: flex;
+      li {
+        float: left;
       }
     }
   }

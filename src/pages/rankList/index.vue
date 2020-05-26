@@ -68,10 +68,6 @@
                     :class="{'mui-icon':true,'mui-icon-arrowthinup':topThree[0].status === 0,'mui-icon-arrowthindown':topThree[0].status === 1,'iconDown':topThree[0].status === 1}">
                 <span>{{topThree[0].rate.toFixed(2) +"%"}}</span>
               </span>
-              <!--<span v-if="topThree[0].flag ==='2'"-->
-                    <!--:class="{'mui-icon':true,'mui-icon-arrowthinup':topThree[0].rateYearStatus === 0,'mui-icon-arrowthindown':topThree[0].rateYearStatus === 1,'iconDown':topThree[0].rateYearStatus === 0}">-->
-                 <!--<span>{{topThree[0].totalTime +"%"}}</span>-->
-              <!--</span>-->
             </p>
           </div>
         </div>
@@ -99,10 +95,6 @@
                     :class="{'mui-icon':true,'mui-icon-arrowthinup':topThree[1].status === 0,'mui-icon-arrowthindown':topThree[1].status === 1,'iconDown':topThree[1].status === 1}">
                 <span>{{topThree[1].rate.toFixed(2) +"%"}}</span>
               </span>
-              <!--<span v-if="topThree[1].flag ==='2'"-->
-                    <!--:class="{'mui-icon':true,'mui-icon-arrowthinup':topThree[1].userInfo.rateYearStatus === 0,'mui-icon-arrowthindown':topThree[1].userInfo.rateYearStatus === 1,'iconDown':topThree[1].userInfo.rateYearStatus === 0}">-->
-                 <!--<span>{{topThree[1].rate +"%"}}</span>-->
-              <!--</span>-->
             </p>
           </div>
         </div>
@@ -146,11 +138,6 @@
                     :class="{'mui-icon':true,'mui-icon-arrowthinup':item.status.toString() === '0','mui-icon-arrowthindown':item.status.toString() === '1','iconDown':item.status.toString() === '1'}">
                 <span>{{item.rate.toFixed(2) +"%"}}</span>
               </span>
-              <!--<span v-if="flag === '2'">-->
-                    <!--:class="{'mui-icon':true,'mui-icon-arrowthinup':item.status.toString()=== '0','mui-icon-arrowthindown':item.status === '1','iconDown':item.status === '1'}">-->
-                <!--<span>{{item.totalTime}}-->
-                <!--</span>-->
-              <!--</span>-->
             </div>
           </div>
         </li>
@@ -231,7 +218,7 @@
           method: 'hideTitle',
           args: null,
         }, {
-          method: 'hideTitle',
+          method: '',
           args: []
         })
       },
@@ -321,6 +308,8 @@
 
             img {
               width: 100%;
+              user-select: none;
+              -webkit-user-select: none;
             }
           }
 
@@ -338,6 +327,8 @@
               width: 100%;
               height: 100%;
               border-radius: 50%;
+              user-select: none;
+              -webkit-user-select: none;
             }
           }
         }
@@ -440,6 +431,8 @@
 
             img {
               width: 100%;
+              user-select: none;
+              -webkit-user-select: none;
             }
           }
 
@@ -455,6 +448,8 @@
               width: 100%;
               height: 100%;
               border-radius: 50%;
+              user-select: none;
+              -webkit-user-select: none;
             }
           }
         }
@@ -547,6 +542,8 @@
       /*background-repeat:no-repeat;*/
       background-size: cover;
       padding-bottom: 1.029rem;
+      user-select: none;
+      -webkit-user-select: none;
 
       .tabsSwitch {
         background-color: transparent;
@@ -626,6 +623,8 @@
               img {
                 width: 100%;
                 height: 100%;
+                user-select: none;
+                -webkit-user-select: none;
                 border-radius: 50%;
               }
             }

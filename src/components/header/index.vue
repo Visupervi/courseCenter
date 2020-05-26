@@ -10,7 +10,6 @@
         <!--<van-icon v-show="title !== '学霸排行榜'" name="arrow-left"/>-->
       </template>
     </van-nav-bar>
-
   </div>
 </template>
 
@@ -131,10 +130,6 @@
             });
             break;
           case 'evaluation':
-            // console.log(this.$route.params.fromName)
-            // console.log(this.$route.name)
-            // mui.alert("您的评分使我们进步", "提示", () => {
-            // });
             if (this.$route.params.fromName === "collageCourse") {
               communicationWithNative({
                 method: 'finish',

@@ -71,9 +71,10 @@
 
 <script>
   import {communicationWithNative, getQueryString} from '../../service/superGuide';
-  import {getCourseCheckPoint, submitCheckPointQue, startStudyTime} from '../../api'
+  import {getCourseCheckPoint, submitCheckPointQue, startStudyTime, delfromExamUser} from '../../api'
   import Header from '../../components/header'
   import {Notify} from 'vant'
+
   /**
    * @Author Visupervi
    * @Date 2019/12/17 9:54
@@ -141,6 +142,9 @@
         });
         if (parseInt(res.code) === 200) {
           this.examList = res.result.questionList;
+          if(this.examList.length === 1){
+            this.nextName = "提交";
+          }
           this.currentQues = this.examList[0]; // 默认显示第一题
           this.setHei(this.currentQues);
           this.checkQuesType(this.currentQues.questionType);
@@ -198,12 +202,13 @@
        */
       nextQuestion() {
         let obj = {};
-        // console.log('选择状态',this.getRadioRes("answer"));
+        console.log('选择状态',this.getRadioRes("answer"));
         if (this.getRadioRes("answer").length > 0) {
           obj = {
             questionId: this.examList[this.quesNum - 1].questionId.toString(),
             answerids: this.getRadioRes("answer")
           };
+          console.log(this.didExamList)
           //判断已做题目中是否包含某一个的对象
           this.addDidQuestionList(this.didExamList, obj);
           if (this.didExamList.length === this.examList.length && this.$refs.btnName.children[0].innerHTML.trim() === "提交") {
@@ -289,6 +294,7 @@
               this.nextName = "下一题"
             }
           } else {
+            console.log(this.quesNum)
             return;
           }
         }
@@ -398,7 +404,7 @@
           method: 'hideTitle',
           args: null,
         }, {
-          method: 'hideTitle',
+          method: '',
           args: []
         })
       },
@@ -431,9 +437,21 @@
       async startStudyDate() {
         let res = await startStudyTime({lessonId: this.$route.params.lessonId})
       },
+
+      // 用户意外退出删除当前用户
+      async deleCurrentUser() {
+        let res = await delfromExamUser({
+          examId: this.examId,
+          examCode: this.examCode,
+        })
+      }
     },
     components: {
       Header
+    },
+    beforeRouteLeave(to, from, next) {
+      this.deleCurrentUser();
+      next();
     }
   }
 </script>
@@ -490,7 +508,6 @@
         input[type='radio']:checked:before, .mui-checkbox input[type='checkbox']:checked:before {
           content: "\e441";
         }
-
 
         input[type='radio'] {
           top: 50%;
@@ -571,8 +588,6 @@
 
 
     /*单选按钮样式*/
-
-
     /*正确答案样式*/
 
     .selectActive {

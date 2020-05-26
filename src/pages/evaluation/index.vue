@@ -2,7 +2,6 @@
   <div class="evalution">
     <Header :title="title"></Header>
     <v-touch @swipeleft="touchLeft" class="touchWrap" @swiperight="touchRight">
-
       <div class="evalWrap">
         <div class="score">
           <p>您对课程满意吗？</p>
@@ -55,10 +54,6 @@
         <div class="btnGroup submitBtn" ref="btnGroup">
           <van-button v-show="true" :class="{btnSubmit:true}" type="primary" size="large" @click="submitComment">提交
           </van-button>
-          <!--<div class="iconWrap">-->
-          <!--<van-icon name="like-o" :class="{'my-van-icon-like':likeFlag}" @click="likeHandler"/>-->
-          <!--<van-icon name="star-o" :class="{'my-van-icon-like':collectFlag}" @click="collectHandler"/>-->
-          <!--</div>-->
         </div>
       </div>
     </v-touch>
@@ -137,8 +132,6 @@
           }
         }
       }
-      // window.goBackTo = this.goBackTo;
-      // this.setBack();
     },
     destroyed() {
     },
@@ -189,10 +182,6 @@
                 method: 'finish',
                 args: []
               });
-              console.log("that.$route.params.fromName", that.$route.params.fromName);
-              // that.$router.push(`${that.$route.params.fromName}?accessToken=${getQueryString("accessToken")}`);
-              // routerSwitch(that.$route.params.fromName, that.$router, "", () => {
-              // });
             })
           }
         } else {
@@ -223,7 +212,7 @@
           method: 'hideTitle',
           args: null,
         }, {
-          method: 'hideTitle',
+          method: '',
           args: []
         })
       },
@@ -323,6 +312,7 @@
       .advice {
         top: 9.8rem;
         margin-bottom: 0.5rem;
+        padding: 10px 16px;
 
         .scrollWrap {
           top: 2.5rem;

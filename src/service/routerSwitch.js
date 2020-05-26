@@ -5,7 +5,7 @@ export const routerSwitch = (fromName, routerObj, methodsName = "", callback) =>
   switch (fromName) {
     case "myCollect":
       if (methodsName === "") {
-        console.log(window.location);
+        // console.log(window.location);
         // local.location = `${window.}`
         routerObj.push(`/myCollect?accessToken=${getQueryString('accessToken')}`).catch(err => {
           console.log(err)

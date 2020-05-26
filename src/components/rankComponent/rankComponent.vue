@@ -32,10 +32,6 @@
                         :class="{'mui-icon':true,'mui-icon-arrowthinup':item.status === 0,'mui-icon-arrowthindown':item.status === 1,'iconDown': parseInt(item.status) === 1}">
                 <span>{{item.rate.toFixed(2) +"%"}}</span>
               </span>
-                  <!--<span v-if="flag === '2'"-->
-                  <!--:class="{'mui-icon':true,'mui-icon-arrowthinup':item.rateYearStatus === 0,'mui-icon-arrowthindown':item.rateYearStatus === 1,'iconDown':item.userInfo.rateYearStatus === 0}">-->
-                  <!--<span>{{item.totalTime +"%"}}</span>-->
-                  <!--</span>-->
                 </div>
               </div>
             </li>

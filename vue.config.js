@@ -3,6 +3,9 @@ const CompressionWebpackPlugin = require("compression-webpack-plugin");
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 console.log("process.env.NODE_ENV:" + process.env.VUE_APP_MODE);
+function resolve(dir) {
+  return path.join(__dirname, dir)
+}
 module.exports = {
   publicPath: "/",
   outputDir: 'depponCollageApp',
@@ -22,11 +25,11 @@ module.exports = {
     hot: process.env.VUE_APP_MODE === "development",
     // host: "localhost",
     // host: "192.168.243.1",
-    host: "172.16.1.67",
-    // host: "192.168.43.155",
+    // host: "0.0.0.0",
+    host: "192.168.137.1",
     // host: "172.20.10.2",
-    // host: "172.16.12.1",
-    // host: "10.226.69.47",
+    // host: "172.20.10.6",
+    // host: "10.224.192.18",
     // host: "127.0.0.1",
     port: 9988,
     https: false,
@@ -53,6 +56,7 @@ module.exports = {
   },
   chainWebpack: config => {
     config.resolve.symlinks(true);
+    config.output.filename('[name].[hash].js').end();
     //修复 Lazy loading routes Error
     config.plugin('html').tap(args => {
       args[0].chunksSortMode = 'none';

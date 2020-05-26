@@ -12,32 +12,26 @@
                 <div class="errorListWrap">
                   <div class="imgParent">
                     <div class="imgWrap">
-                      <!--<div class="studyStatus"-->
-                      <!--:class="{'noStudy':item.isStudy === 3,'hasStudyStatus':item.isStudy === 1,'studing':item.isStudy === 2}">-->
-                      <!--<span v-if="item.isStudy === 3">-->
-                      <!--未学-->
                       <!--</span>-->
-                      <!--<span v-if="item.isStudy === 1">-->
-                      <!--已学-->
-                      <!--</span>-->
-                      <!--<span v-if="item.isStudy === 2">-->
-                      <!--进行-->
-                      <!--</span>-->
-                      <img src="../../assets/images/noStudy.svg" alt="" v-if="item.isStudy === 3"/>
-                      <img src="../../assets/images/studyed.svg" alt="" v-if="item.isStudy === 1"/>
-                      <img src="../../assets/images/instudy.svg" alt="" v-if="item.isStudy === 2"/>
+                      <img src="../../assets/images/weixue.png" alt="" v-if="item.isStudy === 3"/>
+                      <img src="../../assets/images/yixue.png" alt="" v-if="item.isStudy === 1"/>
+                      <img src="../../assets/images/jinxingzhong.png" alt="" v-if="item.isStudy === 2"/>
                       <!--</div>-->
-                      <!--<img :src="item.lessonImg" alt="">-->
+<!--                      <img :src="item.lessonImg" alt="">-->
                     </div>
+                  </div>
+                  <div class="lessonImg">
+                    <img :src="item.lessonImg" alt="">
                   </div>
                   <div class="errorName">
                     <p class="lessonName" v-if="item.lessonName" v-html="item.lessonName"></p>
                   </div>
+
                 </div>
                 <div class="errorListWrap iconWraps">
                   <div class="rate-hold">
                     <p>
-                      <span class="score">评分:</span>
+                      <span class="score">课程评分:</span>
                       <van-icon name="star" :class="{'active':item.totalScore.toString() !== '0'}"/>
                       <span class="scoreNum" :class="{'active':item.totalScore.toString() !== '0'}"
                             style="margin-left: 5px">{{item.totalScore.toFixed(1)}}<span> 分</span></span>
@@ -53,7 +47,7 @@
                       </span>
                     <span class="seeNums">{{parseInt(item.browseNum) > 10000 ? '99999+' : item.browseNum}}</span>
                     <span class="iconImg img1">
-                          <img src="../../assets/images/goods.svg" alt="">
+                          <img src="../../assets/images/zan.svg" alt="">
                         </span>
                     <span class="thumbersUp">{{parseInt(item.likeNum) > 10000 ?  '99999+': item.likeNum}}</span>
                   </div>
@@ -61,13 +55,12 @@
 
               </li>
             </ul>
-            <div class="freshImg" v-if="courseList.length === 0">
-              <div class="blankImg">
-                <img src="../../assets/images/blank.png" alt="">
+            <div class="freshImg" v-show="courseList.length === 0" v-cloak ref="freshImg">
+              <div class="blankImg" v-show="courseList.length === 0" v-cloak>
+                <img src="../../assets/images/blank.png" alt="" v-show="courseList.length === 0" v-cloak>
                 <p>暂无课程</p>
               </div>
             </div>
-
             <div slot="bottom" class="mint-loadmore-bottom" ref="loadeMore">
               <span v-show="bottomStatus !== 'loading'" :class="{ 'rotate': bottomStatus === 'drop' }">↓</span>
               <span v-if="bottomStatus === 'loading'">Loading...</span>
@@ -99,7 +92,7 @@
     getFavoriteLessonList,
     getHaveLessonList
   } from '../../api';
-  import {getQueryString, overscroll,communicationWithNative} from '../../service/superGuide';
+  import {getQueryString, overscroll, communicationWithNative} from '../../service/superGuide';
   import {Indicator} from 'mint-ui';
   export default {
     inject: ['reload'],
@@ -124,7 +117,8 @@
         browserNum: Number,
         isLoading: false,
         tempArr: [],
-        paramObj: ""
+        paramObj: "",
+        isClear:true
       }
     },
     beforeCreate() {
@@ -136,12 +130,9 @@
     created() {
     },
     mounted() {
-      // setTimeout(()=>{
-      //   console.log(this.$refs.scrollHei.offsetHeight);
-      //   console.log(this.$refs.scrollWrap.offsetHeight);
-      //   this.$refs.scrollHei.style.minHeight = `${this.$refs.scrollWrap.offsetHeight - 46}px`
-      // },1500)
       window.getCourseListData = this.getCourseListData;
+      window.reload = this.reload;
+      // this.reload();
     },
     methods: {
       //动态设置上拉框高度
@@ -183,14 +174,6 @@
         this.$refs.loadmore.onBottomLoaded();
         // console.log("上拉距离")
       },
-      //下拉刷新
-      refresh() {
-        // console.log("wewewewewew");
-        // this.courseList = [];
-        // this.page = 1;
-        // this.getCourseListData();
-        // this.$refs.loadmore.onTopLoaded();
-      },
       onRefresh() {
         this.courseList = [];
         this.page = 1;
@@ -208,137 +191,170 @@
        * @param item
        */
       studyHandler(item) {
-        console.log("this.$route.params.lessonId",this.$route.params.lessonId);
-        console.log("this.paramObj.routeName",this.paramObj.routeName);
-        if(this.paramObj.routeName ==="collageCourse"){
+        this.$store.commit("addIsDelLocalData",{"isDeletLocalData":this.isClear});
+        eventBus.$emit("isClear",{"isClear":this.isClear});
+        if (this.paramObj.routeName === "collageCourse") {
           communicationWithNative({
               method: "turnNewPage",
-              args: [`${location.origin}/#/carouse/${item.lessonId}/${this.paramObj.routeName}?accessToken=${getQueryString('accessToken')}&hide_title=1`, `${this.paramObj.routeName}`,"getCourseListData"]
+              args: [`${location.origin}/#/carouse/${item.lessonId}/${this.paramObj.routeName}?accessToken=${getQueryString('accessToken')}&hide_title=1`, `${this.paramObj.routeName}`,"reload"]
             },
             {
               method: "turnNewPage",
-              args: [`${location.origin}/#/carouse/${item.lessonId}/${this.paramObj.routeName}?accessToken=${getQueryString('accessToken')}&hide_title=1`, `${this.paramObj.routeName}`]
+              args: [`${location.origin}/#/carouse/${item.lessonId}/${this.paramObj.routeName}?accessToken=${getQueryString('accessToken')}&hide_title=1`, `${this.paramObj.routeName}`,"reload"]
             }
           )
-        }else {
+        } else {
           this.$router.replace(`/carouse/${item.lessonId}/${this.paramObj.routeName}?accessToken=${getQueryString('accessToken')}`)
         }
-
         // this.$router.replace(`/carouse/${item.lessonId}/${this.paramObj.routeName}?accessToken=${getQueryString('accessToken')}`)
-        // this.$router.push(`/courseBrief/${item.lessonId}?accessToken=${getQueryString('accessToken')}`);
       },
       //  获取课程列表
       /**
        * 1：课程中心搜索，2：正在学习，3：已学课程，4：我的收藏，5：为你推荐
+       * 可以抽取出来，封装成单独的函数
        */
       async getCourseListData() {
         this.paramObj["page"] = this.page;
         this.paramObj["rows"] = this.rows;
-        // let tempArr;
-        // console.log("12121212121212");
         switch (this.paramObj.flag) {
           //课程中中心
           case "1":
-            // console.log("获取数据",this.paramObj);
-            if (this.paramObj.text !== "") {
-              this.paramObj.typeId = 0;
-            } else {
-              // this.paramObj.typeId = this.paramObj.typeId;
-              // console.log('sb')
-            }
-            // this.paramObj.text === ""? console.log('sb') : delete this.paramObj.typeId;
-            // console.log("this.paramObj",this.paramObj);
-            //  ? delete this.paramObj.typeId : this.paramObj.typeId;
-            let res = await getCourseList(this.paramObj);
-            if (parseInt(res.code) === 200) {
-              this.isLoading = false;
-              res.result.length === 0 ? this.allLoaded = true : this.allLoaded = false;
-              this.tempArr = this.replaceKeys(this.paramObj.text, res.result);
-              // console.log("this.courseList",this.courseList);
-              if (this.page === 1) {
-                this.courseList = this.filterRepeat(this.courseList.concat(this.tempArr));
-              } else {
-                this.courseList = this.courseList.concat(this.tempArr);
-              }
-            }
+            this.getCourseCenterData();
             break;
           //  正在学习
           case "2":
-            let resStudy = await getStudyLessonList({
-              text: this.paramObj.text,
-              page: this.page,
-              rows: this.paramObj.rows
-            });
-            if (parseInt(resStudy.code) === 200) {
-              this.isLoading = false;
-              resStudy.result.length === 0 ? this.allLoaded = true : this.allLoaded = false;
-              // this.courseList = this.courseList.concat(resStudy.result);
-              this.tempArr = this.replaceKeys(this.paramObj.text, resStudy.result);
-              if (this.page === 1) {
-                this.courseList = this.filterRepeat(this.courseList.concat(this.tempArr));
-              } else {
-                this.courseList = this.courseList.concat(this.tempArr);
-              }
-            }
+            this.getStuding();
             break;
           //  已学课程
           case "3":
-            // console.log("12121212");
-            let resHasLearn = await getHaveLessonList({
-              text: this.paramObj.text,
-              page: this.page,
-              rows: this.paramObj.rows
-            });
-            if (parseInt(resHasLearn.code) === 200) {
-              this.isLoading = false;
-              resHasLearn.result.length === 0 ? this.allLoaded = true : this.allLoaded = false;
-              this.tempArr = this.replaceKeys(this.paramObj.text, resHasLearn.result);
-              if (this.page === 1) {
-                this.courseList = this.filterRepeat(this.courseList.concat(this.tempArr));
-              } else {
-                this.courseList = this.courseList.concat(this.tempArr);
-              }
-            }
+            this.getStudedData();
             break;
           //  我的收藏
           case "4":
-            let resCollect = await getFavoriteLessonList({
-              text: this.paramObj.text,
-              page: this.page,
-              rows: this.paramObj.rows
-            });
-            if (parseInt(resCollect.code) === 200) {
-              this.isLoading = false;
-              resCollect.result.length === 0 ? this.allLoaded = true : this.allLoaded = false;
-              this.tempArr = this.replaceKeys(this.paramObj.text, resCollect.result);
-              if (this.page === 1) {
-                this.courseList = this.filterRepeat(this.courseList.concat(this.tempArr));
-              } else {
-                this.courseList = this.courseList.concat(this.tempArr);
-              }
-            }
+            this.getCollectCourseData();
             break;
           //  为你推荐
           case "5":
-            let result = await getRecomList(
-              {
-                text: this.paramObj.text,
-                page: this.page,
-                rows: this.paramObj.rows
-              }
-            );
-            if (parseInt(result.code) === 200) {
-              this.isLoading = false;
-              result.result.length === 0 ? this.allLoaded = true : this.allLoaded = false;
-              this.tempArr = this.replaceKeys(this.paramObj.text, result.result);
-              if (this.page === 1) {
-                this.courseList = this.filterRepeat(this.courseList.concat(this.tempArr));
-              } else {
-                this.courseList = this.courseList.concat(this.tempArr);
-              }
-              Indicator.close()
-            }
+            this.getRecomData();
             break;
+        }
+        // this.reload();
+
+        this.$forceUpdate();
+      },
+      // 获取课程中心数据
+      async getCourseCenterData() {
+        if (this.paramObj.text !== "") {
+          this.paramObj.typeId = 0;
+        }
+        let res = await getCourseList(this.paramObj);
+        if (parseInt(res.code) === 200) {
+          this.isLoading = false;
+          res.result.length === 0 ? this.allLoaded = true : this.allLoaded = false;
+          this.tempArr = this.replaceKeys(this.paramObj.text, res.result);
+          // console.log("this.courseList",this.courseList);
+          if (this.page === 1) {
+            this.courseList = this.filterRepeat(this.courseList.concat(this.tempArr));
+          } else {
+            this.courseList = this.courseList.concat(this.tempArr);
+          }
+          // this.reload();
+          // console.log("this.courseList",this.courseList)
+          setTimeout(()=>{
+            if(this.courseList.length === 0) this.$refs.freshImg.style.display = "block";
+          },100);
+
+          // console.log("this.courseList",this.$refs.freshImg)
+        }
+        // console.log("1222222222222222222222")
+        // this.reload();
+      },
+      // 正在学习数据
+      async getStuding() {
+        let resStudy = await getStudyLessonList({
+          text: this.paramObj.text,
+          page: this.page,
+          rows: this.paramObj.rows
+        });
+        if (parseInt(resStudy.code) === 200) {
+          this.isLoading = false;
+          resStudy.result.length === 0 ? this.allLoaded = true : this.allLoaded = false;
+          // this.courseList = this.courseList.concat(resStudy.result);
+          this.tempArr = this.replaceKeys(this.paramObj.text, resStudy.result);
+          if (this.page === 1) {
+            this.courseList = this.filterRepeat(this.courseList.concat(this.tempArr));
+          } else {
+            this.courseList = this.courseList.concat(this.tempArr);
+          }
+          setTimeout(()=>{
+            if(this.courseList.length === 0) this.$refs.freshImg.style.display = "block";
+          },100);
+        }
+      },
+      // 已学课程数据
+      async getStudedData() {
+        let resHasLearn = await getHaveLessonList({
+          text: this.paramObj.text,
+          page: this.page,
+          rows: this.paramObj.rows
+        });
+        if (parseInt(resHasLearn.code) === 200) {
+          this.isLoading = false;
+          resHasLearn.result.length === 0 ? this.allLoaded = true : this.allLoaded = false;
+          this.tempArr = this.replaceKeys(this.paramObj.text, resHasLearn.result);
+          if (this.page === 1) {
+            this.courseList = this.filterRepeat(this.courseList.concat(this.tempArr));
+          } else {
+            this.courseList = this.courseList.concat(this.tempArr);
+          }
+          setTimeout(()=>{
+            if(this.courseList.length === 0) this.$refs.freshImg.style.display = "block";
+          },100);
+        }
+      },
+      //收藏课程数据
+      async getCollectCourseData() {
+        let resCollect = await getFavoriteLessonList({
+          text: this.paramObj.text,
+          page: this.page,
+          rows: this.paramObj.rows
+        });
+        if (parseInt(resCollect.code) === 200) {
+          this.isLoading = false;
+          resCollect.result.length === 0 ? this.allLoaded = true : this.allLoaded = false;
+          this.tempArr = this.replaceKeys(this.paramObj.text, resCollect.result);
+          if (this.page === 1) {
+            this.courseList = this.filterRepeat(this.courseList.concat(this.tempArr));
+          } else {
+            this.courseList = this.courseList.concat(this.tempArr);
+          }
+          setTimeout(()=>{
+            if(this.courseList.length === 0) this.$refs.freshImg.style.display = "block";
+          },100);
+        }
+      },
+      // 获取推荐数据
+      async getRecomData() {
+        let result = await getRecomList(
+          {
+            text: this.paramObj.text,
+            page: this.page,
+            rows: this.paramObj.rows
+          }
+        );
+        if (parseInt(result.code) === 200) {
+          this.isLoading = false;
+          result.result.length === 0 ? this.allLoaded = true : this.allLoaded = false;
+          this.tempArr = this.replaceKeys(this.paramObj.text, result.result);
+          if (this.page === 1) {
+            this.courseList = this.filterRepeat(this.courseList.concat(this.tempArr));
+          } else {
+            this.courseList = this.courseList.concat(this.tempArr);
+          }
+          setTimeout(()=>{
+            if(this.courseList.length === 0) this.$refs.freshImg.style.display = "block";
+          },100);
+          Indicator.close()
         }
       },
       // 对象数组去重
@@ -390,41 +406,39 @@
           this.allLoaded = val.isAlload;
           this.courseList = [];
           this.tempArr = [];
-          // this.setAutoHeight();
           this.page = 1;
-          // this.setAutoHeight();
-          // if(this.page === 1){
-          //   this.courseList = [];
-          //   this.tempArr = [];
-          // }
-          // if (val.typeId !== '' && val.routeName === "collageCourse") {
-          //   console.log("子组件打印值params", "22323232323232");
           this.getCourseListData();
-          // console.log("子组件打印值params", this.paramObj);
-          // }else {
-          //   this.getCourseListData();
-          // }
         },
         deep: true
       }
     },
+    beforeDestroy() {
+
+    }
   };
 </script>
 
 <style lang="less" scoped>
+  [v-cloak]{
+    display: none;
+  }
   .errorScroll {
     position: relative;
     height: calc(100%);
     /*overflow-y: scroll;*/
 
     .scrollWrap {
-      height: calc(100% - 0.857rem);
+      height: calc(100% - 0.857rem - 44px);
       overflow-y: scroll;
       -webkit-overflow-scrolling: touch;
+      &::-webkit-scrollbar {
+        display: none;
+      }
       /*overflow-y:auto!important;*/
 
       .mui-scroll {
         padding-bottom: 4.5rem;
+        background-color: #f9f9f9;
         min-height: calc(100% + 2px);
 
         .mint-loadmore {
@@ -442,23 +456,34 @@
       }
 
       .mui-table-view {
-        /*background-color: #fafafa;*/
-        background-color: #fff;
+        background-color: #f9f9f9;
+        padding-top:0.32rem;
+        /*background-color: #fff;*/
+        padding: 0.32rem 0.7rem 0rem 0.7rem;
         /*列表样式*/
 
         .mui-table-view-cell {
           background-color: #fff;
           /*padding: 0.286rem 0 0.286rem 0.429rem;*/
-          padding: 0.286rem 0.143rem 0.286rem 0rem;
+          padding: 0.55rem 0.55rem 0rem 0.55rem;
           box-sizing: border-box;
           /*margin-bottom: 0.457rem;*/
+          border-radius: 0.16rem;
+          /*width: 95%;*/
+          /*left: 50%;*/
+          /*transform: translateX(-50%);*/
+          margin-top: 0.35rem;
 
           &::after {
             left: 0.48rem;
+            height: 0px;
           }
 
           .errorListWrap {
             display: flex;
+            /*padding-left: 0.64rem;*/
+            box-sizing: border-box;
+            position: relative;
             /*图片样式*/
 
             .iconsWrap {
@@ -478,6 +503,7 @@
                   width: 100%;
                   height: 100%;
                   user-select: none;
+                  -webkit-user-select: none;
                 }
               }
 
@@ -492,64 +518,23 @@
             }
 
             .imgParent {
-              /*flex: 1;*/
-              /*display: flex;*/
-              /*align-items: center;*/
-              /*justify-content: center;*/
               height: 0.48rem;
               position: absolute;
-              left: 0.44rem;
+              left: -0.17rem;
 
               .imgWrap {
-                height: 0.66rem;
-                width: 2.0rem;
-                /*border-radius: 0.229rem;*/
-                /*position: relative;*/
+                height: 0.875rem;
+                width: 2.375rem;
 
                 img {
                   width: 100%;
-                  /*height: 100%;*/
-                  /*border-radius: 0.229rem;*/
-                  /*object-fit:cover;*/
-                }
-
-                /*.studyStatus {*/
-                /*position: absolute;*/
-                /*!*width: 1.771rem;*!*/
-                /*!*height: 1rem;*!*/
-                /*!*border-radius: 0.229rem 0 0.229rem 0;*!*/
-                /*height: 0;*/
-                /*width: 2rem;*/
-                /*border-top:1rem solid red;*/
-                /*border-right: 0.37rem solid transparent;*/
-
-                /*top: 0.286rem;*/
-                /*left: 0;*/
-                /*text-align: center;*/
-
-                /*span {*/
-                /*font-family: PingFangSC-Regular;*/
-                /*font-size: 0.686rem;*/
-                /*color: #FFFFFF;*/
-                /*}*/
-                /*}*/
-
-                .noStudy {
-                  /*background-color: #FF524D;*/
-                }
-
-                .hasStudyStatus {
-                  /*background-color: #999999;*/
-                }
-
-                .studing {
-                  /*background-color: #0099FF;*/
+                  user-select: none;
+                  -webkit-user-select: none;
                 }
               }
             }
 
             /*文字样式*/
-
             .errorName {
               margin-left: 0.457rem;
               flex: 3;
@@ -559,12 +544,12 @@
               }
 
               p:nth-child(1) {
-                font-family: PingFangSC-Medium;
-                font-size: 0.8rem;
+                font-family:  PingFangSC-Regular;;
+                font-size: 0.75rem;
                 color: #333333;
                 margin-left: 0;
                 box-sizing: border-box;
-                text-indent: 2.38rem;
+                /*text-indent: 2.38rem;*/
                 /*line-height: 0.24px;*/
 
               }
@@ -601,13 +586,39 @@
 
 
             }
+            .lessonImg{
+              height: 4rem;
+              width: 6.5rem;
+              /*flex: 1.3;*/
+              img{
+                width: 100%;
+                user-select: none;
+                -webkit-user-select: none;
+                border-radius: 0.15rem;
+                height: 100%;
+              }
 
+            }
+          }
+          .errorListWrap:nth-child(1){
+            &::after{
+              position: absolute;
+              content:"";
+              bottom:0;
+              height: 1px;
+              transform: scaleY(0.5);
+              left: 0rem;
+              right: 0rem;
+              bottom: -0.6rem;
+              background-color: #D8D8D8;
+
+            }
           }
 
           .iconWraps {
             justify-content: space-between;
-            margin-top: 1rem;
-            padding: 0.64rem ;
+            margin-top: 0.5rem;
+            padding:  0.6rem 0rem;
             /*padding-left: 0.3rem;*/
             box-sizing: border-box;
             flex: 1;
@@ -615,17 +626,18 @@
             .rate-hold {
               display: flex;
               justify-content: space-between;
-              padding: 0 0.32rem;
+              /*padding: 0 0.32rem;*/
               margin-top: 0rem;
+              align-items: center;
               flex: 2;
 
               .scoreNum {
                 margin-left: 5rem;
               }
 
-              p:nth-child(0) {
+              p:nth-child(1) {
                 /*background-color: red;*/
-                font-size: 0.24rem;
+                font-size: 0.686rem;
                 color: #999999;
                 margin-left: 0px;
                 display: flex;
@@ -639,6 +651,7 @@
 
             .van-rate {
               flex: 2;
+
               .van-rate__item:not(:last-child) {
                 padding-right: 0.143rem;
               }
@@ -657,23 +670,27 @@
 
         .mui-table-view-cell:last-child {
           &::after {
-            height: 1px;
+            height: 0px;
           }
         }
 
         .mui-table-view-cell:first-child {
+          margin-top: 0;
           &::before {
             position: absolute;
             right: 0;
             top: 0;
             left: 0.48rem;
-            height: 1px;
+            height: 0px;
             content: '';
             -webkit-transform: scaleY(.5);
             -ms-transform: scaleY(.5);
             transform: scaleY(.5);
             background-color: #c8c7cc;
           }
+        }
+        &::before{
+          height: 0;
         }
 
       }
@@ -689,6 +706,7 @@
       /*position: absolute;*/
       /*height: ;*/
       height: 11.429rem;
+      display: none;
 
       .blankImg {
         position: relative;
@@ -700,6 +718,7 @@
 
         img {
           width: 100%;
+          -webkit-user-select: none;
           user-select: none;
         }
 

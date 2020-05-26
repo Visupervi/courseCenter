@@ -1,21 +1,29 @@
 <!--搜索组件-->
 <template>
   <div class="search" ref="search">
-    <div class="searchIcon" v-if="show">
-      <span class="mui-icon  mui-icon-arrowleft" @click="setLeftHandler"></span>
-    </div>
-    <div class="moudleName" v-if="!show ">
-      {{this.title.substring(2)}}
-    </div>
+<!--    <div class="searchIcon" v-if="show">-->
+<!--      <span class="mui-icon  mui-icon-arrowleft" @click="setLeftHandler"></span>-->
+<!--    </div>-->
+<!--    <div class="searchIcon" v-if="this.$route.name === 'collageCourse' && this.value !==''">-->
+<!--      <span class="mui-icon  mui-icon-arrowleft" @click="setLeftHandler"></span>-->
+<!--    </div>-->
+<!--    <div class="moudleName" v-if="!show && this.$route.name !== 'collageCourse'">-->
+<!--      {{this.title.substring(2)}}-->
+<!--    </div>-->
+<!--    <div class="moudleName" v-if="!show&&this.$route.name === 'collageCourse'&&  this.value ==''">-->
+<!--      {{this.title.substring(2)}}-->
+<!--    </div>-->
+    <div class="" style="height: 15px; width: 100%"></div>
     <van-search
       v-model="value"
       shape="round"
       background="#ffffff"
-      placeholder="更多好课等你来挖"
+      placeholder="搜索关键字"
       @input="getInputVal"
       @search='searchHandle'
       @focus="focusHandler"
       @blur="focusCancelHandler($event)"
+      ref="searchs"
     >
     </van-search>
     <van-popup v-model="show" :get-container="getContainer">
@@ -23,7 +31,7 @@
         <div class="hisTitle">
           <div>搜索历史</div>
           <div class="delWrap" @click="delHistory">
-            <img src="../../assets/images/del.svg" alt="">
+            <img style="user-select: none;-webkit-user-select: none;" src="../../assets/images/del.svg" alt="">
           </div>
         </div>
         <div class="hisWord">
@@ -48,6 +56,7 @@
   import {getSearchData, saveSearchData, delSearchData} from '../../api';
   import {inputUp} from '../../service/inputUp';
   import {getDeviceInfo} from '../../service/superGuide';
+  import {communicationWithNative} from '../../service/superGuide'
   export default {
     props: {
       urlFlag: {
@@ -63,7 +72,8 @@
         show: false,
         hisKeyWords: [],
         flag: "",
-        isShowModuleName:false
+        isShowModuleName:false,
+        searchArrow:""
       }
     },
     created() {
@@ -77,10 +87,14 @@
       //输入函数
       getInputVal(val) {
         this.value = val;
+        this.$refs.search.blur();
         this.value === "" ? this.show = false : this.show = true;
         // this.$emit('getSearchVal', val);
         if(this.value === "" ){
+          this.$refs.searchs.querySelector("input").blur();
           this.$emit('getSearchVal', val);
+        }else{
+
         }
         if (this.show) {
           // this.getHisData();
@@ -88,6 +102,7 @@
       },
       getHisVal(item) {
         this.value = item.content;
+        this.show = false;
         this.$emit('getSearchVal', this.value);
       },
       focusHandler() {
@@ -117,11 +132,15 @@
       //手机点击输入
       searchHandle() {
         //向父组件传值
-        console.log("sdsssdsdsdsdsd");
+        // console.log("sdsssdsdsdsdsd");
         this.$emit('getSearchVal', this.value);
         this.show = false;
         this.isShowModuleName = true;
-        if (this.value !== "") this.saveHisData();
+        if (this.value !== ""){
+          this.saveHisData();
+        } else{
+
+        }
       },
       //保存搜索记录
       saveHisData() {
@@ -138,11 +157,11 @@
         if (parseInt(res.code) === 200) {
           this.hisKeyWords = res.result;
         }
-        console.log("获取搜索记录", res);
+        // console.log("获取搜索记录", res);
       },
       //点击向左箭头
       setLeftHandler(){
-        console.log("点击向左箭头");
+        // console.log("点击向左箭头");
         this.value = "";
         this.$emit('getSearchVal', this.value);
         this.show = false;
@@ -152,6 +171,15 @@
         delSearchData({
           flag: this.urlFlag
         })
+      },
+      setLeftSBHandler(){
+        communicationWithNative({
+          method: 'finish',
+          args: null
+        }, {
+          method: 'finish',
+          args: []
+        });
       }
     },
     computed: {
@@ -179,8 +207,8 @@
       display: flex;
       .mui-icon{
         position: absolute;
-        top: 0.4rem;
-        left: 1rem;
+        top: 1rem;
+        left: -0.3rem;
         font-size: 1.3rem;
         font-weight: 600;
         color: #1989fa;
@@ -194,6 +222,7 @@
       font-family: PingFangSC-Medium;
       font-size: .85rem;
       color: #333333;
+      min-height: 1rem;
       /*font-weight: 600;*/
     }
 

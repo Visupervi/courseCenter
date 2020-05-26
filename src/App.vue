@@ -18,9 +18,10 @@
     },
     methods:{
       reload () {
-        // console.log("刷新路由组件123");
+        console.log("刷新路由组件123");
         this.isRouterAlive = false;            //先关闭，
         this.$nextTick(function () {
+          console.log("一直刷新")
           this.isRouterAlive = true;         //再打开
         })
       }
@@ -39,7 +40,7 @@
   /*-moz-osx-font-smoothing: grayscale;*/
   /*text-align: center;*/
   /*color: #2c3e50;*/
-  background-color: #fafafa;
+  background-color: #fff;
   height: 100%;
   width: 100%;
   overflow: hidden;

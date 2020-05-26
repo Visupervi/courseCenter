@@ -45,25 +45,34 @@
     props: {},
     data() {
       return {
-        startTime: new Date(),
-        endTime: new Date(),
-        minDate: new Date(1970, 0, 1),
-        maxDate: new Date(2100, 11, 1),
-        show: false,
-        showToolbar: false
+        startTime: new Date(), // 开始时间
+        endTime: new Date(), // 结束时间
+        minDate: new Date(1970, 0, 1), // 最小时间
+        maxDate: new Date(2100, 11, 1), // 最大时间
+        show: false, // 弹出层是否显示
+        showToolbar: false // 是否显示日期插件工具栏
       }
     },
     methods: {
+      /**
+       * 关闭弹出层
+       */
       cancelCalProp() {
         console.log(this.endTime.toLocaleDateString(), this.startTime);
         this.show = false;
       },
+      /**
+       * 获取父组件的值
+       * @param data
+       */
       getParentData(data) {
         console.log(data);
         this.show = data.show;
       },
+      /**
+       * 确认事件
+       */
       sureSelect() {
-
         console.log(new Date(formatTime(this.endTime).replace(/-/g, '/')).getTime());
         if(new Date(formatTime(this.endTime).replace(/-/g, '/')).getTime() < new Date(formatTime(this.startTime).replace(/-/g, '/')).getTime()){
           Notify({ type: 'primary', message: '结束时间必须小于开始时间' });
@@ -77,7 +86,6 @@
 
         }
 
-
       }
     }
 
@@ -86,7 +94,6 @@
 <style scoped lang="less">
   .calenderProp {
     height: 100%;
-
     .errorBtn {
       display: flex;
       justify-content: space-between;

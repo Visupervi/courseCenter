@@ -1,6 +1,10 @@
 <!--竖向tab栏切换组件，自定义右边部分-->
 <template>
   <div class="treeSelect">
+<!--    <van-tabs v-if="items.length >0" scrollspy sticky @click="getListData">-->
+<!--      <van-tab v-for="(item,index) in items" :title="item.text" :key="index"  :name="item.id">-->
+<!--      </van-tab>-->
+<!--    </van-tabs>-->
     <van-tree-select
       height="55vw"
       :items="items"
@@ -11,14 +15,15 @@
         <van-dropdown-menu>
           <van-dropdown-item @change="dropDownChange" title="排序" v-model="value1":options="option1"/>
           <van-dropdown-item @change="dropDownChange"  title="阅读量" v-model="value2" :options="option2"/>
-          <van-dropdown-item @change="dropDownChange" @close="closeMenu" @open="openMenu" :title="selectTitle"
-                             ref="item"
-                             class="mySelect">
-            <button :class="{'isSelect':item.isActive}" type="button" class="mui-btn" v-for="(item,index) in option3"
-                    :key="index" @click="selectMenu(item)">
-              {{item.text}}
-            </button>
-          </van-dropdown-item>
+<!--          <van-dropdown-item @change="dropDownChange" @close="closeMenu" @open="openMenu" :title="selectTitle"-->
+<!--                             ref="item"-->
+<!--                             class="mySelect">-->
+<!--            <button :class="{'isSelect':item.isActive}" type="button" class="mui-btn" v-for="(item,index) in option3"-->
+<!--                    :key="index" @click="selectMenu(item)">-->
+<!--              {{item.text}}-->
+<!--            </button>-->
+<!--          </van-dropdown-item>-->
+          <van-dropdown-item @change="selectMenu($event)"  v-model="value3" :title="selectTitle" :options="option3"/>
         </van-dropdown-menu>
         <courseList v-if="selecData.typeId !==''" :selecData="selecData"></courseList>
       </template>
@@ -50,8 +55,8 @@
     },
     data() {
       return {
-        active: "",
         // active: 0,
+        active:"",
         items: [],
         typeId: "",
         status: false,
@@ -129,14 +134,12 @@
           }else{
             this.selecData.typeId = JSON.parse(localStorage.getItem('currentSelect'))[0].typeId;
           }
-          // this.selecData.typeId = this.items[0].id;
-          // console.log();
           this.getListData(this.selecData.typeId)
         }
       },
       //竖向菜单切换
       getListData(val) {
-        // console.log("竖向菜单val",this.active);
+        console.log("竖向菜单val",val);
         if (this.items.length > 1) {
           // console.log("this.item",this.items);
           for (let i = 0; i < this.items.length; i++) {
@@ -154,7 +157,7 @@
       },
       //横向菜单切换
       dropDownChange(val,e) {
-        console.log('val', val,e);
+        // console.log('val', val,e);
         switch (val.toString()) {
           case "1":
             this.selecData.updateTime = "1";
@@ -188,60 +191,65 @@
         this.courseList = val
       },
       //横向菜单选择
-      selectMenu(item) {
-        // console.log("选择菜单", item);
+      selectMenu(item,event) {
+        // console.log("选择菜单", item,event);
         // this.selectTitle = item.text;
-        switch (item.value) {
+        switch (item) {
           case "d":
-            !item.isActive ? this.selecData.contentType = "1" : this.selecData.contentType = "";
+            // !item.isActive ? this.selecData.contentType = "1" : this.selecData.contentType = "";
+            this.selecData.contentType = "1";
             this.selecData.studyFlag = "";
             this.selecData.updateTime = "";
             this.selecData.browserNum = "";
-            this.cancelSelected(item.text);
-            item.isActive = !item.isActive;
+            // this.cancelSelected(item.text);
+            // item.isActive = !item.isActive;
             break;
           case "e":
-            !item.isActive ? this.selecData.contentType = "0" : this.selecData.contentType = "";
+            // !item.isActive ? this.selecData.contentType = "0" : this.selecData.contentType = "";
+            this.selecData.contentType = "0";
             this.selecData.studyFlag = "";
             this.selecData.updateTime = "";
             this.selecData.browserNum = "";
-            this.cancelSelected(item.text);
-            item.isActive = !item.isActive;
+            // this.cancelSelected(item.text);
+            // item.isActive = !item.isActive;
             break;
           case "f":
-            !item.isActive ? this.selecData.studyFlag = "2" : this.selecData.studyFlag = "";
+            // !item.isActive ? this.selecData.studyFlag = "2" : this.selecData.studyFlag = "";
+            this.selecData.studyFlag = "2";
             this.selecData.updateTime = "";
             this.selecData.contentType = "";
             this.selecData.browserNum = "";
-            this.cancelSelected(item.text);
-            item.isActive = !item.isActive;
+            // this.cancelSelected(item.text);
+            // item.isActive = !item.isActive;
             break;
           case "g":
-            !item.isActive ? this.selecData.studyFlag = "1" : this.selecData.studyFlag = "";
+            // !item.isActive ? this.selecData.studyFlag = "1" : this.selecData.studyFlag = "";
+            this.selecData.studyFlag = "1";
             this.selecData.updateTime = "";
             this.selecData.contentType = "";
             this.selecData.browserNum = "";
-            this.cancelSelected(item.text);
-            item.isActive = !item.isActive;
+            // this.cancelSelected(item.text);
+            // item.isActive = !item.isActive;
             break;
           case "h":
-            !item.isActive ? this.selecData.studyFlag = "0" : this.selecData.studyFlag = "";
+            // !item.isActive ? this.selecData.studyFlag = "0" : this.selecData.studyFlag = "";
+            this.selecData.studyFlag = "0";
             this.selecData.updateTime = "";
             this.selecData.contentType = "";
             this.selecData.browserNum = "";
-            this.cancelSelected(item.text);
-            item.isActive = !item.isActive;
+            // this.cancelSelected(item.text);
+            // item.isActive = !item.isActive;
             break;
           case "i":
             this.selecData.studyFlag = "";
             this.selecData.updateTime = "";
             this.selecData.contentType = "";
             this.selecData.browserNum = "";
-            this.cancelSelected(item.text);
-            item.isActive = !item.isActive;
+            // this.cancelSelected(item.text);
+            // item.isActive = !item.isActive;
             break;
         }
-        this.$refs.item.toggle();
+        // this.$refs.item.toggle();
       },
       //筛选数组
       cancelSelected(text) {
@@ -253,14 +261,8 @@
       },
       // 关闭/打开下拉菜单
       openMenu() {
-        // for (let i = 0; i < this.option3.length; i++) {
-        //   this.option3[i].isActive = false;
-        // }
       },
       closeMenu() {
-        // for (let i = 0; i < this.option3.length; i++) {
-        //   this.option3[i].isActive = false;
-        // }
       }
     },
     watch: {
@@ -268,7 +270,7 @@
       sosoVal: {
         immediate: true,
         handler(val) {
-          console.log("搜索组件传值", val);
+          // console.log("搜索组件传值", val);
           // this.selecData.text = val;
         },
         deep: true

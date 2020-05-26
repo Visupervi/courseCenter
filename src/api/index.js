@@ -99,10 +99,10 @@ export const getRecomList = (data) => Ajax('/app/getRecomList', data, 'get');
 export const checkFavoriteInfo = (data) => Ajax('/app/checkFavoriteInfo', data, 'get');
 //检查是否点赞
 export const checkLikeInfo = (data) => Ajax('/app/checkLikeInfo', data, 'get');
-
 // 提交评论
-
 export const postComent = (data) => Ajax('/app/singleCom',data,'get');
+// 删除考试人
+export const delfromExamUser = (data) => Ajax('/app/delfromExamUser',data,'get');
 
 
 

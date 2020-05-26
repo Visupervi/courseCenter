@@ -10,31 +10,6 @@
     >
       <div class="score">
         <p>添加评论</p>
-        <!--<div class="ioconText">-->
-          <!--<span>展示形式：</span>-->
-          <!--<van-rate-->
-            <!--v-model="value"-->
-            <!--void-icon="star"-->
-            <!--void-color="#eee"-->
-          <!--/>-->
-        <!--</div>-->
-        <!--<div class="ioconText">-->
-          <!--<span>具体内容：</span>-->
-          <!--<van-rate-->
-            <!--v-model="value1"-->
-            <!--void-icon="star"-->
-            <!--void-color="#eee"-->
-          <!--/>-->
-        <!--</div>-->
-        <!--<div class="ioconText">-->
-          <!--<span>实用性：</span>-->
-          <!--<van-rate-->
-            <!--v-model="value2"-->
-            <!--void-icon="star"-->
-            <!--void-color="#eee"-->
-          <!--/>-->
-        <!--</div>-->
-
         <div class="advice">
           <div class="scrollWrap mui-scroll-wrapper">
             <div class="mui-scroll" ref="carouse">
@@ -54,18 +29,10 @@
           </div>
         </div>
       </div>
-
-
-      <!--<div class="breakThrough" v-show="true" ref="btnHei">-->
-        <!--<van-button class="isActive" type="primary" size="large" v-show="true" @click="submitComent($event)">提交评论-->
-        <!--</van-button>-->
-        <!--&lt;!&ndash;<van-button v-show="isActive" type="primary" size="large" @click="breakThrough()">去闯关</van-button>&ndash;&gt;-->
-      <!--</div>    -->
       <div class="breakThrough" v-show="true" ref="btnHei">
         <van-cell-group>
           <van-field v-model="value" placeholder="请输入用户名" />
         </van-cell-group>
-        <!--<van-button v-show="isActive" type="primary" size="large" @click="breakThrough()">去闯关</van-button>-->
       </div>
     </van-popup>
 
@@ -80,16 +47,16 @@
     props: {
       objData: {
         type: Object
-      }
+      } // 父组件传值
     },
     data() {
       return {
-        isShow: this.objData.propOver,
+        isShow: this.objData.propOver, // 是否显示弹出层
         value: 0,
         value1: 0,
         value2: 0,
-        message: "",
-        isComent: this.objData.isComents
+        message: "", // 评论内容
+        isComent: this.objData.isComents // 是否评论
       }
     },
     created() {
@@ -150,6 +117,10 @@
         }
       },
     },
+    /**
+     * 监听父组件动态传值
+     * 尽量不要用对象传值，容易出现意想不到的刺激
+     */
     watch: {
       objData: {
         immediate: true,

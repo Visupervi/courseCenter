@@ -59,7 +59,7 @@
     },
     created() {
       this.getCourseInfo();
-      this.hideNativeHeder();
+      // this.hideNativeHeder();
 
     },
     mounted() {
